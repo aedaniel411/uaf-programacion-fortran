@@ -1,7 +1,7 @@
 program chicharronera
    implicit none
 
-   real :: a, b, c
+   real :: a, b, c, r
    real :: x1, x2
 
    write (*,*)
@@ -13,10 +13,19 @@ program chicharronera
    read (*,*) b
    write (*,'(A,$)') "Valor de c : "
    read (*,*) c
+   r = b**2 - 4*a*c
 
-   x1 = ((-b) + (b**2 - 4*a*c)**(0.5)) / (2 * a)
-   x2 = ((-b) - (b**2 - 4*a*c)**(0.5)) / (2 * a)
+   if (r >= 0) then
+      !es real
+      write (*,*) "Raiz real"
+   else
+      !es imaginaria
+      write (*,*) "Raiz imaginaria"
+   end if
+   
+   x1 = ((-b) + (r)**(0.5)) / (2 * a)
+   x2 = ((-b) - (r)**(0.5)) / (2 * a)
 
    write (*,*) "Valor de x1 : ", x1
    write (*,*) "Valor de x2 : ", x2
-end program 
+end program
