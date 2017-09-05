@@ -1,4 +1,4 @@
-program area
+program area_cuadrado
    implicit none
 
    integer :: L
@@ -6,7 +6,7 @@ program area
    write (*,*)
    write (*,*) "Programa para calcular el area de un cuadrado"
    write (*,*)
-   
+
    ! leer (L)
    write (*,'(A, $)') "Dame el valor de L :"
    read (*,*) L
