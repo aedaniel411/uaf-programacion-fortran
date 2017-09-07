@@ -27,8 +27,8 @@ program chicharronera
    else
       !es imaginaria
       write (*,*) "Raiz imaginaria"
-      xc1 = ((-b) + (r)**(0.5)) / (2 * a)
-      xc2 = ((-b) - (r)**(0.5)) / (2 * a)
+      xc1 = ((-b) + (b**2 - 4*a*c)**(0.5)) / (2 * a)
+      xc2 = ((-b) - (b**2 - 4*a*c)**(0.5)) / (2 * a)
 
       write (*,*) "Valor de x1 compleja : ", xc1
       write (*,*) "Valor de x2 compleja : ", xc2
