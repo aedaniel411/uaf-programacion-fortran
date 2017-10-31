@@ -1,6 +1,17 @@
 module mostrar
 
 contains
+   subroutine VerMatrizEntera(matriz,nr,nc)
+      integer :: matriz(2,2)
+      integer :: nr, nc, r, c
+      do r = 1, nr
+         do c = 1, nc
+            print '(i3,$)', matriz(r,c)
+         end do
+         print *
+      end do
+   end subroutine
+
    subroutine VerMatrizReal(matriz,nr,nc)
       real :: matriz(100,101)
       integer :: nr, nc, r, c
