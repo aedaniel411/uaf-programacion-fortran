@@ -1,7 +1,7 @@
 program conway
    implicit none
 
-   integer :: mg1(0:101,0:101)
+   integer :: mg1(0:101,0:101), mg2(0:101,0:101)
    integer :: r, c, nr, nc
    real :: aux
 
@@ -12,7 +12,7 @@ program conway
    nr = 17
    write (*,*) "cuantas columnas"
    !read (*,*) nc
-   nc = 17
+   nc = 55
 
    mg1 = 0
 
@@ -22,18 +22,71 @@ program conway
          mg1(r,c) = nint(aux)
       end do
    end do
+   mg2 = mg1
 
-   do r = 1, nr
-      do c = 1, nc
-         write (*,'(i3,$)') mg1(r,c)
+   do
+      call system("clear")
+      mg1 = mg2
+      do r = 1, nr
+         do c = 1, nc
+            if (mg1(r,c) == 1) then
+               write (*,'(a1,$)') char(219) !"#"
+            else
+               write (*,'(a1,$)') " "
+            end if
+         end do
+         write (*,*)
       end do
-      write (*,*)
+      call system("sleep 1")
+
+      mg2 = 0
+      do r = 1, nr
+         do c = 1, nc
+            mg2(r,c) = reglas (mg1(r,c), sumar_vecinos(mg1,r,c))
+         end do
+         write (*,*)
+      end do
+
    end do
 
 stop
 contains
-   integer function contar_vecinos(mat, x, y)
+   integer function sumar_vecinos(mat, y, x)
       integer :: mat(0:101,0:101), x, y
+      integer :: suma, r, c
+
+      suma = 0
+
+      r = y - 1
+      do c = x - 1, x + 1
+         suma = suma + mat(r,c)
+      end do
+
+      r = y + 1
+      do c = x - 1, x + 1
+         suma = suma + mat(r,c)
+      end do
+
+      suma = suma + mat(y,x-1) + mat(y,x+1)
+
+      sumar_vecinos = suma
+   end function
+
+   integer function reglas(estado,cuenta)
+      integer :: estado, cuenta
+      integer :: resultado
+
+      resultado = 0
+
+      if ((estado == 0) .and. (cuenta==3)) then
+         resultado = 1
+      end if
+
+      if ((estado==1).and.((cuenta==2).or.(cuenta==3))) then
+         resultado = 1
+      end if
+
+      reglas = resultado
    end function
 
    subroutine init_random_seed()
