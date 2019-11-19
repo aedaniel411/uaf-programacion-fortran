@@ -1,48 +1,59 @@
 program carrera
 	use mkey
+	use omp_lib
+	
 	implicit none
 	integer :: pista (100,25), nivel(25)	
 	integer :: p, d, col
+	integer :: pid
 	
 	pista = 0
 	d = 3
 	p = 0
 	col = 13
 	
-	call sys_keyset(1) !- abrimos conexion
-	do 	
-	
-		call sys_keyin(key)
-		
-		if (key == ichar('q') ) exit
-		if (key == ichar('a') ) col = col -1
-		if (key == ichar('d') ) col = col +1
-		if (col > 25) col = 25
-		if (col < 1) col = 1
-	
-		p = p + 1
-		
-		if (mod(p,d) == 0) then
-			call nuevonivel (nivel)
-		else
-			nivel = 0
-		!	pista(90, col) = 10
-		end if
-		
-		!-- Le hablamos a la grua?
-		if (pista(90, col) == 0) then
-			pista(90, col) = 10
-		else
-			write (*,*) "Game Over"
-			write (*,*) 
-			write (*,*) "Nivel ", p
-			exit
-		end if
-		
-		call integranivel (pista, nivel, col)
-		call escribemat (pista, 100, 25, 0.1)
-	end do
-	call sys_keyset(0) !- cerramos conexion
+	!$omp parallel
+		pid = omp_get_thread_num()
+		call sys_keyset(1) !- abrimos conexion
+		do 	
+			if (pid == 0) then
+				!-- master
+				call sys_keyin(key)
+				
+				if (key == ichar('q') ) exit
+				if (key == ichar('a') ) col = col -1
+				if (key == ichar('d') ) col = col +1
+				if (col > 25) col = 25
+				if (col < 1) col = 1
+			end if
+			
+			if (pid == 1) then
+				!- slave
+				p = p + 1
+				
+				if (mod(p,d) == 0) then
+					call nuevonivel (nivel)
+				else
+					nivel = 0
+				!	pista(90, col) = 10
+				end if
+				
+				!-- Le hablamos a la grua?
+				if (pista(90, col) == 0) then
+					pista(90, col) = 10
+				else
+					write (*,*) "Game Over"
+					write (*,*) 
+					write (*,*) "Nivel ", p
+					exit
+				end if
+				
+				call integranivel (pista, nivel, col)
+				call escribemat (pista, 100, 25, 0.1)
+			end if
+		end do
+		call sys_keyset(0) !- cerramos conexion
+	!$omp end parallel
 stop
 contains
 	subroutine integranivel (pista, nivel, col)
