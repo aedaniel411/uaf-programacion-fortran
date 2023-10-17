@@ -44,3 +44,5 @@
 2023b/.ipynb_checkpoints/
 
 2023b/.vscode/
+
+*.log
