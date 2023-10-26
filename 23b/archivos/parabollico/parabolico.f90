@@ -18,13 +18,22 @@ program parabolico
     t = 0.0
     tmax = 2.0 * v0 * sin(d) / g
 
-    open(unit=99, file='gatitos.dat', status='new')
-    do while (t <= tmax)
+    open(unit=99, file='gatitos.dat', status='unknown')
+    do while (t < tmax)
+        t = t + (tmax / p)
         y = v0 * sin(d) * t - 0.5* g*t**2
         x = v0 * cos(d) * t 
         write (99,*) t, x, y
-        t = t + (tmax / p)
     end do 
     close(99)
+
+    open (unit=81, file='grafica.gnuplot', status='unknown')
+    write (81,*) "set title 'tiro parabolico"
+    write (81,*) "plot 'gatitos.dat' using 2:3 "
+    write (81,*) "pause mouse close"
+    close (81)
+    
+    call system('gnuplot grafica.gnuplot') 
+    
 
 end program
